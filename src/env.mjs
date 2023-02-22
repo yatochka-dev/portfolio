@@ -11,7 +11,6 @@ const server = z.object({
     ADMIN_EMAIL: z.string().email(),
     ADMIN_PASSWORD: z.string().min(1),
     WEBHOOK_URL: z.string().url(),
-    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string().min(1),
     RECAPTCHA_SECRET_KEY: z.string().min(1),
 });
 
@@ -22,6 +21,8 @@ const server = z.object({
  */
 const client = z.object({
     // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string().min(1),
+    NEXT_PUBLIC_API_URL: z.string().url(),
 });
 
 /**
@@ -40,6 +41,7 @@ const processEnv = {
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 };
 
 // Don't touch the part below
