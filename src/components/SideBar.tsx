@@ -6,7 +6,6 @@ import pb from "../lib/pocketbase";
 import PersonIcon from '@mui/icons-material/Person';
 import {SideBarIcon} from "./helpers/SideBarIcon";
 import TextBox from "./TextBox";
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import BookIcon from '@mui/icons-material/Book';
 
 

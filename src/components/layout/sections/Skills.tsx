@@ -20,13 +20,15 @@ import CropDinRoundedIcon from '@mui/icons-material/CropDinRounded';
 import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import ArchitectureRoundedIcon from '@mui/icons-material/ArchitectureRounded';
-import {randomId, useDisclosure, useIntersection} from "@mantine/hooks";
+import {randomId, useDisclosure} from "@mantine/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import {motion, useAnimation} from "framer-motion";
-import {faker} from "@faker-js/faker";
+import {motion} from "framer-motion";
+import useSection from "../../../hooks/useSection";
+import useOnInViewAnimate from "../../../hooks/useOnInViewAnimate";
 
+// region SkillCard
 const icons = {
     [SkillCategory.LANGUAGES]: CodeRoundedIcon,
     [SkillCategory.FRAMEWORKS]: CropDinRoundedIcon,
@@ -41,44 +43,50 @@ function SkillCard({skill, delay}: { skill: Skill, delay: number }) {
 
     const [open, openManager] = useDisclosure(false)
 
-    const controls = useAnimation()
-    const {ref, entry} = useIntersection({
-        threshold: 1,
-    });
+    // const {ref, entry} = useIntersection({});
+    //
+    //
+    // const [opacity, setOpacity] = useState(0);
+    // const [X, setX] = useState(-50);
+    //
+    // const {start: assignStyles, clear} = useTimeout(() => {
+    //     setOpacity(1)
+    //     setX(0)
+    //
+    // }, delay + 100);
+    //
+    // useEffect(() => {
+    //
+    //     if (!entry?.isIntersecting) {
+    //         setOpacity(0)
+    //         setX(-50)
+    //     } else {
+    //         assignStyles()
+    //     }
+    //
+    //
+    // }, [entry, delay, assignStyles]);
 
-
-    const [opacity, setOpacity] = useState(0);
-    const [X, setX] = useState(-50);
-
-    useEffect(() => {
-
-        if (!entry?.isIntersecting) {
-            setOpacity(0)
-            setX(-50)
-        } else {
-            setTimeout(() => {
-                setOpacity(1)
-                setX(0)
-            }, delay + 100);
+    const {animation: animateCard} = useOnInViewAnimate(
+        {
+            initial: {
+                opacity: 0,
+                x: -50,
+            },
+            animate: {
+                opacity: 1,
+                x: 0,
+            },
+            duration: .3,
+            delay: (delay / 1000) + .1,
         }
-
-
-    }, [entry, controls, delay]);
+    )
 
     return (
         <>
             <motion.div
                 className={`skill-card-container-${randomId()}`}
-                animate={{
-                    opacity: opacity,
-                    x: X,
-                }}
-                ref={ref}
-                transition={{
-                    duration: .9,
-                    ease: "linear",
-                    type: "spring",
-                }}
+                {...animateCard}
             >
                 <Paper variant={"outlined"} role={"button"}>
                     <Button sx={{
@@ -188,6 +196,8 @@ function SkillCard({skill, delay}: { skill: Skill, delay: number }) {
     )
 }
 
+//endregion
+
 export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
     const [skills, setSkills] = useState<Skill[]>([])
 
@@ -214,32 +224,12 @@ export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
             setSkills(data)
         }
 
-        // loadSkills().catch(console.error);
+        loadSkills().catch(console.error);
 
-        // generate random skills
-        const randomSkills = Array.from({length: 20}, () => {
-
-            const cat = Object.values(SkillCategory)[Math.floor(Math.random() * 5) ]
-            console.log("Cat: ", cat)
-
-            const skill: Skill = {
-                name: faker.random.word(),
-                category: cat,
-                description: faker.lorem.paragraphs(2),
-                knowledge_level: Math.floor(Math.random() * 3) + 1,
-                image: faker.image.image(),
-                link_to_source: faker.internet.url(),
-            };
-
-            return skill;
-        })
-
-        console.log(randomSkills)
-        setSkills(randomSkills)
     }, [])
 
     return (
-        <Section name={"skills"}>
+        <Section name={"skills"} render={"skills" === useSection().name}>
 
             <Container>
                 <Box sx={{
@@ -251,6 +241,15 @@ export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
                     <Box>
                         <TextBox variant={"h3"} textAlign={"center"}>
                             My technical skills
+                        </TextBox>
+                        <TextBox variant={"subtitle1"} textAlign={"center"} sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                        }}>
+                            Want to know what I built with these skills? Check out my <Box
+                            sx={{cursor: "pointer"}} component={"b"}
+                            onClick={() => scrollToNext()}>&nbsp;projects</Box>.
                         </TextBox>
                     </Box>
 
@@ -278,14 +277,8 @@ export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
                                     }}>
                                         {
                                             isCat(skills, cat).map((skill, index) => (
-
-                                                <>
-
-                                                    <SkillCard key={`skill-${index}`} skill={skill}
-                                                               delay={(cat_index + 1) * (index + 1.5) * 100}/>
-
-                                                </>
-
+                                                <SkillCard key={`skill-${index}`} skill={skill}
+                                                           delay={(cat_index + 1) * (index + 1.5) * 100}/>
                                             ))
                                         }
                                     </Box>

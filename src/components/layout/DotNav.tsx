@@ -1,5 +1,4 @@
 import {Box} from "@mui/material";
-import {useScrollLock, useToggle} from "@mantine/hooks";
 
 interface DotNavProps {
     sections: string[];

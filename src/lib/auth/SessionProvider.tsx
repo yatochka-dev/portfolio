@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import pb from "../pocketbase";
 import type {BaseAuthStore} from "pocketbase";
-import {User} from "../models";
+import type {User} from "../models";
 
 
 

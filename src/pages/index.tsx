@@ -1,21 +1,35 @@
-import {Box, IconButton, Tooltip} from "@mui/material";
+import {Box, CircularProgress, IconButton, Tooltip} from "@mui/material";
 import {type NextPage} from "next";
 import DotNav from "../components/layout/DotNav";
-import {ReactNode, useEffect} from "react";
-import Home from "../components/layout/sections/Home";
-import Section from "../components/layout/Section";
-import {useFullscreen, useHotkeys, useScrollLock, useToggle} from "@mantine/hooks";
+import type {ReactNode} from "react";
+import React from "react";
+import {useFullscreen, useHotkeys, useToggle, useWindowEvent} from "@mantine/hooks";
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
-import About from "../components/layout/sections/About";
-import Skills from "../components/layout/sections/Skills";
+import dynamic from "next/dynamic";
+
+const Home = dynamic(() => import("../components/layout/sections/Home"), {
+    ssr: false, loading: () => <div style={{display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100svh"}}><CircularProgress style={{color: "#fff"}}/></div>
+})
+const About = dynamic(() => import("../components/layout/sections/About"), {ssr: false})
+const Skills = dynamic(() => import("../components/layout/sections/Skills"), {ssr: false})
+const Projects = dynamic(() => import("../components/layout/sections/Projects"), {ssr: false})
+const Contact = dynamic(() => import("../components/layout/sections/Contact"), {ssr: false})
+
+export const SectionContext = React.createContext<{ name: string, scrollToNext: () => void }>({
+        name: "home",
+        scrollToNext: () => undefined,
+    }
+);
+
 
 const IndexHomePage: NextPage = () => {
-    const sections = ["home", "about", "skills", "project", "contact", "blog"]
+
+
+    const sections = ["home", "about", "skills", "project", "contact"]
 
     const {toggle, fullscreen} = useFullscreen();
 
-    const [scrollLocked, setScrollLocked] = useScrollLock(true, {disableBodyPadding: true});
 
     const [lastScrolledTo, setLastScrolledTo] = useToggle(sections);
 
@@ -30,10 +44,6 @@ const IndexHomePage: NextPage = () => {
 
     }
 
-    useEffect(() => {
-        // scroll to top on page load
-        window.scrollTo(0, 0);
-    }, [])
 
     useHotkeys(
         [
@@ -61,17 +71,35 @@ const IndexHomePage: NextPage = () => {
         ]
     )
 
+    useWindowEvent(
+        "resize",
+        () => {
+            handleClick(lastScrolledTo)
+        }
+    )
+
+
     const sectionElements: { [key: string]: ReactNode } = {
         "home": <Home scrollToNext={() => handleClick("about")}/>,
         "about": <About scrollToNext={() => handleClick("skills")}/>,
-        "skills": <Skills scrollToNext={() => handleClick("projects")}/>,
-        "project": <Section name={"project"}>project</Section>,
-        "contact": <Section name={"contact"}>contact</Section>,
-        "blog": <Section name={"blog"}>blog</Section>,
-
+        "skills": <Skills scrollToNext={() => handleClick("project")}/>,
+        "project": <Projects scrollToNext={() => handleClick("contact")}/>,
+        "contact": <Contact/>,
     }
+
+
     return (
-        <>
+        <SectionContext.Provider value={{
+            name: lastScrolledTo,
+            scrollToNext: () => {
+                const index = sections.indexOf(lastScrolledTo);
+                if (index < sections.length - 1) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    handleClick(sections[index + 1]);
+                }
+            }
+        }}>
             <Box sx={{
                 position: "relative",
 
@@ -99,7 +127,7 @@ const IndexHomePage: NextPage = () => {
                     <Box aria-label={"sections"}>
                         {
                             sections.map((section, index) => (
-                                <Box key={`section-${index}`}>
+                                <Box key={`section-${index}`} component={"span"}>
                                     {sectionElements[section]}
                                 </Box>
                             ))
@@ -109,7 +137,7 @@ const IndexHomePage: NextPage = () => {
                 </Box>
 
             </Box>
-        </>
+        </SectionContext.Provider>
     )
 }
 

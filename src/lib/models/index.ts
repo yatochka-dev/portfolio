@@ -58,3 +58,9 @@ export interface Skill extends Record {
     readonly image: string,
     readonly knowledge_level: number,
 }
+
+
+export interface Project extends Record {
+    readonly name: string,
+    readonly picture: string,
+}

@@ -5,15 +5,15 @@ import {useForm} from "@mantine/form";
 import {useId, useToggle} from '@mantine/hooks';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import useSession, {signIn} from "../../lib/auth/useSession";
+import {signIn} from "../../lib/auth/useSession";
 import TextBox from "../TextBox";
 
 
 export default function LoginForm() {
-    const {
-        session,
-        status,
-    } = useSession();
+    // const {
+    //     session,
+    //     status,
+    // } = useSession();
 
     const uuid1 = useId("email-login-field");
     const uuid2 = useId("password-login-field");
@@ -31,7 +31,7 @@ export default function LoginForm() {
         },
 
         validate: {
-            password: (value) => "Error"
+            password: (value) => `Error ${value}`
         },
     });
 

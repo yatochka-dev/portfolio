@@ -17,7 +17,7 @@ interface SideBarIconProps {
     disabled?: boolean,
 
     // Actions
-    onClick?: ((event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | ((event: unknown) => unknown) | (() => void) | any,
+    onClick?: ((event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | ((event: never) => void) | (() => void) | never,
     href?: string,
     newTab?: boolean,
 
@@ -28,7 +28,6 @@ export function SideBarIcon({
                                 children,
                                 color,
                                 sx,
-                                active,
                                 disabled,
                                 onClick,
                                 href,
@@ -56,6 +55,7 @@ export function SideBarIcon({
                         centerRipple={false}
                         disabled={disabled}
 
+                        //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                         onClick={onClick ?? (() => 0)}
             >
 

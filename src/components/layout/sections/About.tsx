@@ -1,42 +1,42 @@
 import Section from "../Section";
 import {Box, Container} from "@mui/material";
 import TextBox from "../../TextBox";
-import type {Variants} from "framer-motion";
 import PlaceholderImage from "../../helpers/PlaceholderImage";
+import useSection from "../../../hooks/useSection";
 
-const buttonVariants: Variants = {
-    hover: {
-        scale: 1.1,
-        transition: {
-            yoyo: Infinity
-
-        },
-    },
-    tap: {
-        scale: 0.9,
-    },
-    animate: {
-        scale: [1],
-        y: [
-            0, 10, 0
-        ],
-
-        transition: {
-
-            duration: 1,
-            repeat: Infinity,
-            type: "spring"
-
-        }
-    }
-
-}
+// const buttonVariants: Variants = {
+//     hover: {
+//         scale: 1.1,
+//         transition: {
+//             yoyo: Infinity
+//
+//         },
+//     },
+//     tap: {
+//         scale: 0.9,
+//     },
+//     animate: {
+//         scale: [1],
+//         y: [
+//             0, 10, 0
+//         ],
+//
+//         transition: {
+//
+//             duration: 1,
+//             repeat: Infinity,
+//             type: "spring"
+//
+//         }
+//     }
+//
+// }
 
 export default function About({scrollToNext}: { scrollToNext: () => void }) {
 
 
     return (
-        <Section name={"about"}>
+        <Section name={"about"} render={"about" === useSection().name}>
 
             <Container>
                 <Box sx={{
@@ -66,7 +66,7 @@ export default function About({scrollToNext}: { scrollToNext: () => void }) {
                                 mb: 2,
                                 maxWidth: "150%",
                             }}>
-                                Hi, I'm <b>Philip Sagan</b>
+                                Hi, I&apos;m <b>Philip Sagan</b>
                             </TextBox>
                             <TextBox variant={"subtitle1"} sx={{
                                 "b": {
