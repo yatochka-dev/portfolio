@@ -29,7 +29,6 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {motion} from "framer-motion";
 import useSection from "../../../hooks/useSection";
 import useOnInViewAnimate from "../../../hooks/useOnInViewAnimate";
-import {faker} from "@faker-js/faker";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 // region SkillCard
@@ -206,7 +205,7 @@ function SkillCard({skill, delay}: { skill: Skill, delay: number }) {
 
 export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
     const [skills, setSkills] = useState<Skill[]>([])
-    const [openedCats, setOpenedCats] = useSetState({});
+    const [openedCats, setOpenedCats] = useSetState<any>({});
 
 
     function isCat(s: Skill[], c: SkillCategory) {
@@ -255,6 +254,7 @@ export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
 
     }, [])
 
+    // @ts-ignore
     const collapseNeeded = useMediaQuery(theme => theme.breakpoints.down("md"))
 
     // set alls cats to close
