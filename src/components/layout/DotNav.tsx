@@ -15,19 +15,39 @@ export default function DotNav({sections, handleClick, lastScrolledTo}: DotNavPr
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection: "column",
+            flexDirection: {
+                lg: "column",
+                xs: "row",
+            },
             position: "fixed",
-            top: "50%",
-            right: "0",
-            transform: "translate(-50%, -50%)",
-            cursor: "pointer",
+            top: {
+                lg: "50%",
+                xs: "0",
+            },
+            right: {
+                lg: "0",
+                xs: "50%",
+            },
+            transform: {
+                lg: "translate(-50%, -50%)",
+                xs: "translate(50%, 0)",
+            },
+            zIndex: 1000,
+
 
         }}>
             {sections.map(
                 (section, index) => (
                     <Box key={index} sx={{
-                        width: ".7rem",
-                        height: ".7rem",
+                        width: {
+                            lg: ".7rem",
+                            xs: "1.1rem",
+                        },
+                        height: {
+                            lg: ".7rem",
+                            xs: "1.1rem",
+                        },
+                        zIndex: 1000,
                         borderRadius: "50%",
                         backgroundColor: "text.secondary",
                         display: "inline-block",
@@ -36,7 +56,9 @@ export default function DotNav({sections, handleClick, lastScrolledTo}: DotNavPr
                         opacity: lastScrolledTo === section ? .5 : 1,
                         ":hover": {
                             opacity: .7,
-                        }
+                        },
+                        cursor: "pointer",
+
                     }} onClick={() => handleClick(section)}/>
                 )
             )}

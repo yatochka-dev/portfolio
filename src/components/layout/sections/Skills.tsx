@@ -6,13 +6,15 @@ import pb from "../../../lib/pocketbase";
 import {
     Box,
     Button,
+    Collapse,
     Container,
     Dialog,
     Divider,
     IconButton,
     LinearProgress,
     Paper,
-    Tooltip
+    Tooltip,
+    useMediaQuery
 } from "@mui/material";
 import TextBox from "../../TextBox";
 import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
@@ -20,13 +22,15 @@ import CropDinRoundedIcon from '@mui/icons-material/CropDinRounded';
 import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import ArchitectureRoundedIcon from '@mui/icons-material/ArchitectureRounded';
-import {randomId, useDisclosure} from "@mantine/hooks";
+import {randomId, useDisclosure, useSetState} from "@mantine/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {motion} from "framer-motion";
 import useSection from "../../../hooks/useSection";
 import useOnInViewAnimate from "../../../hooks/useOnInViewAnimate";
+import {faker} from "@faker-js/faker";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 // region SkillCard
 const icons = {
@@ -88,7 +92,9 @@ function SkillCard({skill, delay}: { skill: Skill, delay: number }) {
                 className={`skill-card-container-${randomId()}`}
                 {...animateCard}
             >
-                <Paper variant={"outlined"} role={"button"}>
+                <Paper variant={"outlined"} role={"button"} sx={{
+                    maxWidth: 250,
+                }}>
                     <Button sx={{
                         display: "flex",
                         flexDirection: "row",
@@ -200,6 +206,7 @@ function SkillCard({skill, delay}: { skill: Skill, delay: number }) {
 
 export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
     const [skills, setSkills] = useState<Skill[]>([])
+    const [openedCats, setOpenedCats] = useSetState({});
 
 
     function isCat(s: Skill[], c: SkillCategory) {
@@ -226,7 +233,32 @@ export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
 
         loadSkills().catch(console.error);
 
+        // // @TODO: remove this
+        // generate random skills
+        // const randomSkills = Array.from({length: 20}, () => {
+        //
+        //     const cat = Object.values(SkillCategory)[Math.floor(Math.random() * 5)]
+        //
+        //     const skill: Skill = {
+        //         name: faker.random.word(),
+        //         category: cat,
+        //         description: faker.lorem.paragraphs(2),
+        //         knowledge_level: Math.floor(Math.random() * 3) + 1,
+        //         image: faker.image.image(),
+        //         link_to_source: faker.internet.url(),
+        //     };
+        //
+        //     return skill;
+        // })
+        // setSkills(randomSkills)
+
+
     }, [])
+
+    const collapseNeeded = useMediaQuery(theme => theme.breakpoints.down("md"))
+
+    // set alls cats to close
+
 
     return (
         <Section name={"skills"} render={"skills" === useSection().name}>
@@ -255,35 +287,61 @@ export default function Skills({scrollToNext}: { scrollToNext: () => void }) {
 
                     <Box sx={{
                         display: "grid",
-                        gridTemplateRows: "repeat(1, 1fr)",
-                        gridTemplateColumns: "repeat(5, 1fr)",
-                        gridGap: 24,
-
-
+                        gridGap: 16,
+                        gridTemplate: {
+                            xl: "repeat(1, 1fr) / repeat(5, 1fr)",
+                            lg: "repeat(2, 1fr) / repeat(4, 1fr)",
+                            md: "repeat(2, 1fr) / repeat(3, 1fr)",
+                            sm: "repeat(3, 1fr) / repeat(2, 1fr)",
+                            xs: "repeat(5, 1fr) / repeat(1, 1fr)",
+                        },
                     }}>
                         {
-                            getAllCats().map((cat, cat_index) => (
-                                <Box key={`skill-cat-${cat_index}`}>
-                                    <TextBox variant={"h4"} sx={{
-                                        my: 2
-                                    }}>
-                                        {cat}
-                                    </TextBox>
+                            getAllCats().map((cat, cat_index) => {
 
-                                    <Box sx={{
-                                        display: "grid",
-                                        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                                        gap: 1,
-                                    }}>
-                                        {
-                                            isCat(skills, cat).map((skill, index) => (
-                                                <SkillCard key={`skill-${index}`} skill={skill}
-                                                           delay={(cat_index + 1) * (index + 1.5) * 100}/>
-                                            ))
-                                        }
+
+                                // if collapseNeeded is false, then we don't need to collapse the categories, else we do
+                                let open: boolean;
+                                if (!collapseNeeded) {
+                                    open = true;
+
+                                } else {
+                                    open = openedCats[cat] ?? false;
+                                }
+
+
+                                return (
+                                    <Box key={`skill-cat-${cat_index}`}>
+                                        <TextBox variant={"h4"} sx={{
+                                            my: 2,
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }} onClick={() => {
+                                            setOpenedCats(prev => {
+                                                prev[cat] = !prev[cat]
+                                                return prev
+                                            })
+                                        }}>
+                                            {cat} <ExpandMoreIcon fontSize={"large"}/>
+                                        </TextBox>
+
+                                        <Collapse in={open} timeout={"auto"} unmountOnExit
+                                                  sx={{
+                                                      display: "grid",
+                                                      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                                                      gap: 1,
+                                                  }}>
+                                            {
+                                                isCat(skills, cat).map((skill, index) => (
+                                                    <SkillCard key={`skill-${index}`} skill={skill}
+                                                               delay={(cat_index + 1) * (index + 1.5) * 100}/>
+                                                ))
+                                            }
+                                        </Collapse>
                                     </Box>
-                                </Box>
-                            ))
+                                )
+
+                            })
                         }
 
                     </Box>

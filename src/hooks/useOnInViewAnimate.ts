@@ -45,9 +45,6 @@ export default function UseOnInViewAnimate(
 
     useEffect(() => {
         if (entry === null) return;
-
-        console.log(entry.isIntersecting)
-
         if (entry.isIntersecting) {
 
 

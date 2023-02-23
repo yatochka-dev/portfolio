@@ -1,8 +1,11 @@
 import Section from "../Section";
 import {Box, Container} from "@mui/material";
 import TextBox from "../../TextBox";
-import PlaceholderImage from "../../helpers/PlaceholderImage";
 import useSection from "../../../hooks/useSection";
+import pic from "../../../../public/700x600.webp";
+import dynamic from "next/dynamic";
+
+const Image = dynamic(() => import('mui-image'), {ssr: false})
 
 // const buttonVariants: Variants = {
 //     hover: {
@@ -50,17 +53,40 @@ export default function About({scrollToNext}: { scrollToNext: () => void }) {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-
+                        flexDirection: {
+                            md: "row",
+                            xs: "column"
+                        }
                     }}>
-                        <Box>
-                            <PlaceholderImage h={"600"} w={"400"} f={"png"}/>
+                        <Box sx={{
+                            maxWidth: {
+                                md: "400px",
+                                xs: "700px"
+                            },
+                            maxHeight: {
+                                md: "700px",
+
+                            },
+                            mb: {
+                                md: 0,
+                                xs: 4
+                            }
+                        }}>
+                            <Image height={"400px"} width={"100%"} src={pic.src} alt={"My picture"}></Image>
                         </Box>
 
                         <Box sx={{
                             display: "flex",
                             flexDirection: "column",
-                            maxWidth: "35%",
-                            px: 4,
+                            maxWidth: {
+                                lg: "35%",
+                                md: "45%",
+                                sm: "100%"
+                            },
+                            px: {
+                                md: 4,
+                                sm: 2,
+                            },
                         }}>
                             <TextBox variant={"h4"} sx={{
                                 mb: 2,

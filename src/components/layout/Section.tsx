@@ -16,6 +16,7 @@ export default function Section(
         <Box id={name} component={"section"} sx={{
             minHeight: "100svh",
             display: "flex",
+            maxWidth: "100svw",
             ...sx
         }}>
             <>

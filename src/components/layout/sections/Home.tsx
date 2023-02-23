@@ -37,8 +37,8 @@ const buttonVariants: Variants = {
 
 }
 
-export default function Home({scrollToNext}: { scrollToNext: () => void }) {
 
+export default function Home({scrollToNext}: { scrollToNext: () => void }) {
     const {animation: animateBlock} = UseOnInViewAnimate(
         {
             initial: {
@@ -66,6 +66,7 @@ export default function Home({scrollToNext}: { scrollToNext: () => void }) {
         easing: "easeInOut",
     });
 
+
     return (
         <Section name={"home"} sx={{
             display: "flex",
@@ -80,27 +81,60 @@ export default function Home({scrollToNext}: { scrollToNext: () => void }) {
                     display: "flex",
                     minHeight: "100svh",
                     position: "relative",
-                }}>
-                    <motion.div style={{
+                    maxWidth: "100vw",
+                    "& > .root-block-home-page": {
+                        flexDirection: {
+                            md: "row",
+                            xs: "column",
+                        },
                         display: "flex",
-                        alignItems: "center",
                         justifyContent: "center",
-                    }} {...animateBlock}>
+                        alignItems: "center",
+                    }
+                }}>
+                    <motion.div {...animateBlock} className={"root-block-home-page"}>
                         <motion.div {...animatePicture} >
 
                             <Avatar src={""}
                                     sx={{
-                                        width: 200,
-                                        height: 200,
+                                        width: {
+                                            md: 200,
+                                            sm: 350,
+                                            xs: 250
+                                        },
+                                        height: {
+                                            md: 200,
+                                            sm: 350,
+                                            xs: 250
+                                        },
+                                        borderRadius: {
+                                            md: "50%",
+                                            sm: "30%",
+                                        },
+                                        mb: {
+                                            xs: 2
+                                        }
+
                                     }}/>
 
                         </motion.div>
-                        <Box sx={{ml: 4}}>
-                            <TextBox variant={"h2"}>
+                        <Box sx={{ml: 4, maxWidth: "85vw",}}>
+                            <TextBox variant={"h2"} sx={{
+                                fontSize: {
+                                    md: "3.75rem",
+                                    sm: "3rem",
+                                    xs: "2rem"
+                                }
+                            }}>
                                 My name is Philip Sagan
                             </TextBox>
 
-                            <TextBox variant={"subtitle1"}>
+                            <TextBox variant={"subtitle1"} sx={{
+                                fontSize: {
+                                    md: "1.5rem",
+                                },
+
+                            }}>
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet
                                 beatae consectetur doloremque ducimus eius, enim harum, incidunt
                                 non, pariatur quas rerum saepe sint sunt! Autem ducimus illum
@@ -115,6 +149,7 @@ export default function Home({scrollToNext}: { scrollToNext: () => void }) {
                         position: "absolute",
                         bottom: "6rem",
                         left: "50%",
+                        transform: "translateX(-50%)",
                     }}>
                         <motion.div variants={buttonVariants}
                                     whileTap={"tap"}

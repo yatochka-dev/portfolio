@@ -28,7 +28,6 @@ const IndexHomePage: NextPage = () => {
 
     const sections = ["home", "about", "skills", "project", "contact"]
 
-    const {toggle, fullscreen} = useFullscreen();
 
 
     const [lastScrolledTo, setLastScrolledTo] = useToggle(sections);
@@ -104,23 +103,23 @@ const IndexHomePage: NextPage = () => {
                 position: "relative",
 
             }}>
-                <Tooltip title={`${fullscreen ? "Exit" : "Enter"} fullscreen mode`}>
-                    <IconButton sx={{
-                        position: "fixed",
-                        top: "1rem",
-                        right: "1rem",
-                        zIndex: 1000,
-                        color: "text.secondary",
-                    }} onClick={() => {
-                        toggle().catch(console.error)
+                {/*<Tooltip title={`${fullscreen ? "Exit" : "Enter"} fullscreen mode`}>*/}
+                {/*    <IconButton sx={{*/}
+                {/*        position: "fixed",*/}
+                {/*        top: "1rem",*/}
+                {/*        right: "1rem",*/}
+                {/*        zIndex: 1000,*/}
+                {/*        color: "text.secondary",*/}
+                {/*    }} onClick={() => {*/}
+                {/*        toggle().catch(console.error)*/}
 
-                    }}>
-                        {
-                            fullscreen ? <FullscreenExitIcon fontSize={"large"}/> :
-                                <FullscreenIcon fontSize={"large"}/>
-                        }
-                    </IconButton>
-                </Tooltip>
+                {/*    }}>*/}
+                {/*        {*/}
+                {/*            fullscreen ? <FullscreenExitIcon fontSize={"large"}/> :*/}
+                {/*                <FullscreenIcon fontSize={"large"}/>*/}
+                {/*        }*/}
+                {/*    </IconButton>*/}
+                {/*</Tooltip>*/}
                 <Box>
                     <DotNav sections={sections} lastScrolledTo={lastScrolledTo}
                             handleClick={handleClick}/>
